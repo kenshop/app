@@ -29,6 +29,9 @@ jobs:
       - name: Install Node Dependencies
         run: npm install
 
+      - name: Build Web Assets for Capacitor
+        run: npm run build
+
       - name: Initialize Capacitor Android Project
         run: |
           npx cap add android || true

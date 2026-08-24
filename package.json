@@ -4,6 +4,7 @@
   "description": "بازی چالش برانگیز و هیجان انگیز پل شیشه ای برای اندروید و وب",
   "main": "index.html",
   "scripts": {
+    "build": "node build.js",
     "start": "python -m http.server 8080",
     "cap:add": "npx cap add android",
     "cap:sync": "npx cap sync android",

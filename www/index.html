@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>بازی پل شیشه‌ای | Glass Bridge Game</title>
+    <meta name="description" content="بازی چالش برانگیز و هیجان‌انگیز پل شیشه‌ای با ۱۰ جان و رکورد روزانه">
+    <meta name="theme-color" content="#070614">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg error:', err));
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- 2.5D Canvas for Bridge Rendering -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- 1. HOME SCREEN OVERLAY -->
+        <div id="homeScreen" class="screen-overlay">
+            <div class="home-header">
+                <div class="brand-title">
+                    <span>💎</span> پل شیشه‌ای
+                </div>
+                <!-- Daily Streak Badge Top Right -->
+                <div class="streak-badge-wrapper" title="تعداد روزهای متوالی بازی">
+                    <span class="streak-flame">🔥</span>
+                    <span id="streakBadge" class="streak-text">Day 1</span>
+                </div>
+            </div>
+
+            <div class="home-center">
+                <div class="game-logo">🌉</div>
+                <h1 class="main-heading">چالش پل شیشه‌ای</h1>
+                <div class="best-score-card">
+                    <span>بهترین رکورد شما:</span>
+                    <span id="homeBestScore" class="score-num">0</span>
+                </div>
+            </div>
+
+            <div class="home-footer">
+                <button id="btnPlay" class="btn-primary">شروع بازی 🚀</button>
+                <div style="display: flex; gap: 10px;">
+                    <button id="btnHowTo" class="btn-secondary" style="flex: 1;">راهنما 📖</button>
+                    <button id="btnSoundToggle" class="btn-icon">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. IN-GAME HUD OVERLAY -->
+        <div id="hudOverlay" class="hud-overlay hidden">
+            <div class="hud-top-bar">
+                <div class="hud-score-badge">
+                    امتیاز: <span id="hudScore">0</span>
+                </div>
+                <!-- 10 Hearts Container -->
+                <div id="hudLivesContainer" class="hud-lives-container"></div>
+                <button id="btnPause" class="btn-icon" style="width: 36px; height: 36px; font-size: 1rem;">⏸️</button>
+            </div>
+        </div>
+
+        <!-- 3. GAME OVER MODAL -->
+        <div id="gameOverModal" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2 class="modal-title">پایان بازی 💔</h2>
+                <div id="newRecordBadge" class="new-record-tag hidden">🎉 رکورد جدید!</div>
+                
+                <div class="results-grid">
+                    <div class="result-box">
+                        <span class="result-label">رکوردی که الان زدی</span>
+                        <span id="finalCurrentScore" class="result-val">0</span>
+                    </div>
+                    <div class="result-box">
+                        <span class="result-label">بهترین رکورد کل</span>
+                        <span id="finalBestScore" class="result-val">0</span>
+                    </div>
+                </div>
+
+                <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                    <button id="btnRestart" class="btn-primary">تلاش مجدد 🔄</button>
+                    <button id="btnHome" class="btn-secondary">صفحه اصلی 🏠</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. HOW TO PLAY MODAL -->
+        <div id="howToModal" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2 class="modal-title" style="color: var(--primary-cyan);">راهنمای بازی</h2>
+                <ul class="rules-list">
+                    <li>در هر ردیف ۳ شیشه جلوته که ۲ تاش سالمه و ۱ دونه‌اش می‌شکنه!</li>
+                    <li>روی یکی از ۳ شیشه‌ی ردیف بعدی کلیک یا لمس کن تا بپری.</li>
+                    <li>شما کلاً ۱۰ تا جان دارید. هر بار روی شیشه شکننده بیفتی، ۱ جانت کم میشه.</li>
+                    <li>روزهای بازی در بالا سمت راست نوشته میشه (Day 1, Day 2...). اگه یک روز بازی نکنی، استریک صفر میشه!</li>
+                </ul>
+                <button id="btnCloseHowTo" class="btn-primary" style="margin-top: 10px;">متوجه شدم 👍</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/audio.js"></script>
+    <script src="js/streak.js"></script>
+    <script src="js/gameEngine.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

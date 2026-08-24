@@ -1,8 +1,7 @@
 {
   "appId": "com.glassbridge.game",
   "appName": "پل شیشه‌ای",
-  "webDir": ".",
-  "bundledWebRuntime": false,
+  "webDir": "www",
   "server": {
     "androidScheme": "https"
   },
