@@ -1,0 +1,26 @@
+{
+  "name": "glass-bridge-mobile-game",
+  "version": "1.0.0",
+  "description": "بازی چالش برانگیز و هیجان انگیز پل شیشه ای برای اندروید و وب",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "cap:add": "npx cap add android",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android"
+  },
+  "keywords": [
+    "glass-bridge",
+    "game",
+    "android",
+    "capacitor",
+    "pwa"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  }
+}
