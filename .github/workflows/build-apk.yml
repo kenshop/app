@@ -1,15 +1,17 @@
-name: Build Glass Bridge Android APK
+name: Build and Release Glass Bridge Android APK
 
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
-  build-apk:
+  build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Source Code
@@ -43,8 +45,26 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
+      - name: Prepare APK Package
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v1.0.apk
+
       - name: Upload Downloadable APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Glass-Bridge-Game-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: glass-bridge-v1.0.apk
+
+      - name: Create Automatic GitHub Release for Direct Mobile Download
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: دانلود اپلیکیشن پل شیشه‌ای v1.0.${{ github.run_number }}
+          body: |
+            📱 **لینک دانلود مستقیم فایل APK اندروید**
+            روی فایل `glass-bridge-v1.0.apk` در قسمت **Assets** پایین کلیک کنید تا مستقیماً روی گوشی دانلود و نصب شود.
+          draft: false
+          prerelease: false
+          files: glass-bridge-v1.0.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
