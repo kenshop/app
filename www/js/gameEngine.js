@@ -28,6 +28,8 @@ class GameEngine {
         this.player = {
             row: 0,
             col: 1, // 0: Left, 1: Center, 2: Right
+            lastSafeRow: 0,
+            lastSafeCol: 1,
             x: 0,
             y: 0,
             targetX: 0,
@@ -137,6 +139,8 @@ class GameEngine {
         
         this.player.row = 0;
         this.player.col = 1;
+        this.player.lastSafeRow = 0;
+        this.player.lastSafeCol = 1;
         this.player.jumpProgress = 1;
         this.player.isFalling = false;
         this.player.fallY = 0;
