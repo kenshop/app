@@ -38,11 +38,10 @@ function copyDir(dirName) {
     console.log(`Copied directory ${dirName} -> www/`);
 }
 
-// Copy web assets
+// Copy web assets (force fresh assets)
 copyFile('index.html');
 copyFile('styles.css');
 copyFile('manifest.json');
-copyFile('sw.js');
 copyDir('js');
 
-console.log('Web assets build complete in www/ folder!');
+console.log('Web assets build complete in www/ folder (Cache-busting enforced)!');

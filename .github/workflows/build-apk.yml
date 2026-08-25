@@ -31,7 +31,7 @@ jobs:
       - name: Install Node Dependencies
         run: npm install
 
-      - name: Build Web Assets for Capacitor
+      - name: Build Fresh Web Assets for Capacitor
         run: npm run build
 
       - name: Initialize Capacitor Android Project
@@ -47,35 +47,35 @@ jobs:
 
       - name: Prepare Dynamic APK Package Name
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v1.0.${{ github.run_number }}.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v2.0.${{ github.run_number }}.apk
           cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-latest.apk
 
       - name: Upload Downloadable APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Glass-Bridge-Game-APK-${{ github.run_number }}
-          path: glass-bridge-v1.0.${{ github.run_number }}.apk
+          path: glass-bridge-v2.0.${{ github.run_number }}.apk
 
       - name: Create Automatic GitHub Release for Direct Mobile Download
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: 🚀 نسخه جدید اپلیکیشن پل شیشه‌ای (v1.0.${{ github.run_number }})
+          tag_name: v2.0.${{ github.run_number }}
+          name: 🔥 نسخه اصلاح‌شده و نهایی (v2.0.${{ github.run_number }})
           body: |
-            📱 **دانلود مستقیم فایل جدید APK اندروید (نسخه v1.0.${{ github.run_number }})**
+            📱 **دانلود مستقیم APK اصلاح‌شده (نسخه v2.0.${{ github.run_number }})**
             
-            ✅ **تغییرات این نسخه:**
-            - اصلاح کامل منطق ۱۰ جان (اسپاون روی آخرین شیشه امن بدون صفر شدن امتیاز)
-            - باز شدن کادر باخت (Game Over) **تنها پس از اتمام تمامی ۱۰ جان**
-            - عدم کش مرورگر با نام‌گذاری دینامیک فایل APK
+            ✅ **تغییرات نهایی اعمال‌شده:**
+            - پاک‌سازی کامل کش قبلی مرورگر گوشی (Cache-Busting v200)
+            - اصلاح کامل ۱۰ جان (اسپاون روی آخرین شیشه امن)
+            - عدم نمایش کادر باخت تا زمانی که تمام ۱۰ جان تمام شوند
 
-            👇 **برای دانلود مستقیم روی فایل زیر در بخش Assets لمس کنید:**
-            `glass-bridge-v1.0.${{ github.run_number }}.apk`
+            👇 **از بخش Assets پایین دانلود کنید:**
+            `glass-bridge-v2.0.${{ github.run_number }}.apk`
           draft: false
           prerelease: false
           make_latest: true
           files: |
-            glass-bridge-v1.0.${{ github.run_number }}.apk
+            glass-bridge-v2.0.${{ github.run_number }}.apk
             glass-bridge-latest.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

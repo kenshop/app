@@ -8,13 +8,18 @@
     <meta name="theme-color" content="#070614">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=200">
     <script>
+        // Force unregister legacy service workers and clear cache storage in Android WebView
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg error:', err));
-            });
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for (let r of registrations) r.unregister();
+            }).catch(() => {});
+        }
+        if ('caches' in window) {
+            caches.keys().then(keys => {
+                for (let k of keys) caches.delete(k);
+            }).catch(() => {});
         }
     </script>
 </head>
@@ -98,7 +103,7 @@
                 <ul class="rules-list">
                     <li>در هر ردیف ۳ شیشه جلوته که ۲ تاش سالمه و ۱ دونه‌اش می‌شکنه!</li>
                     <li>روی یکی از ۳ شیشه‌ی ردیف بعدی کلیک یا لمس کن تا بپری.</li>
-                    <li>شما کلاً ۱۰ تا جان دارید. هر بار روی شیشه شکننده بیفتی، ۱ جانت کم میشه.</li>
+                    <li>شما کلاً ۱۰ تا جان دارید. هر بار روی شیشه شکننده بیفتی، ۱ جانت کم میشه و روی شیشه امن قبلی قرار می‌گیری.</li>
                     <li>روزهای بازی در بالا سمت راست نوشته میشه (Day 1, Day 2...). اگه یک روز بازی نکنی، استریک صفر میشه!</li>
                 </ul>
                 <button id="btnCloseHowTo" class="btn-primary" style="margin-top: 10px;">متوجه شدم 👍</button>
@@ -106,10 +111,10 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/audio.js"></script>
-    <script src="js/streak.js"></script>
-    <script src="js/gameEngine.js"></script>
-    <script src="js/app.js"></script>
+    <!-- Scripts with Version Query to bust cache -->
+    <script src="js/audio.js?v=200"></script>
+    <script src="js/streak.js?v=200"></script>
+    <script src="js/gameEngine.js?v=200"></script>
+    <script src="js/app.js?v=200"></script>
 </body>
 </html>
