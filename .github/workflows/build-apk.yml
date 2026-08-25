@@ -45,26 +45,37 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Prepare APK Package
+      - name: Prepare Dynamic APK Package Name
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v1.0.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v1.0.${{ github.run_number }}.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-latest.apk
 
       - name: Upload Downloadable APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Glass-Bridge-Game-APK
-          path: glass-bridge-v1.0.apk
+          name: Glass-Bridge-Game-APK-${{ github.run_number }}
+          path: glass-bridge-v1.0.${{ github.run_number }}.apk
 
       - name: Create Automatic GitHub Release for Direct Mobile Download
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: دانلود اپلیکیشن پل شیشه‌ای v1.0.${{ github.run_number }}
+          name: 🚀 نسخه جدید اپلیکیشن پل شیشه‌ای (v1.0.${{ github.run_number }})
           body: |
-            📱 **لینک دانلود مستقیم فایل APK اندروید**
-            روی فایل `glass-bridge-v1.0.apk` در قسمت **Assets** پایین کلیک کنید تا مستقیماً روی گوشی دانلود و نصب شود.
+            📱 **دانلود مستقیم فایل جدید APK اندروید (نسخه v1.0.${{ github.run_number }})**
+            
+            ✅ **تغییرات این نسخه:**
+            - اصلاح کامل منطق ۱۰ جان (اسپاون روی آخرین شیشه امن بدون صفر شدن امتیاز)
+            - باز شدن کادر باخت (Game Over) **تنها پس از اتمام تمامی ۱۰ جان**
+            - عدم کش مرورگر با نام‌گذاری دینامیک فایل APK
+
+            👇 **برای دانلود مستقیم روی فایل زیر در بخش Assets لمس کنید:**
+            `glass-bridge-v1.0.${{ github.run_number }}.apk`
           draft: false
           prerelease: false
-          files: glass-bridge-v1.0.apk
+          make_latest: true
+          files: |
+            glass-bridge-v1.0.${{ github.run_number }}.apk
+            glass-bridge-latest.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
