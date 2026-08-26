@@ -1,9 +1,9 @@
-// Glass Bridge Game Engine - Ultra Optimized 60FPS Mobile Canvas Renderer
+// Glass Bridge Game Engine - Clean Rebuild 60FPS Mobile Canvas Renderer
 
 class GameEngine {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d', { alpha: false }); // Optimize performance
+        this.ctx = this.canvas.getContext('2d', { alpha: false });
         
         this.state = 'HOME'; // 'HOME', 'PLAYING', 'JUMPING', 'RESPAWNING', 'GAMEOVER'
         this.maxLives = 10;
@@ -12,7 +12,7 @@ class GameEngine {
         this.bestScore = parseInt(localStorage.getItem('glass_bridge_best_score') || '0', 10);
         this.isNewRecord = false;
 
-        // Bridge & World Layout
+        // Bridge Layout
         this.currentStep = 0;
         this.rows = [];
         this.tileWidth = 85;
@@ -20,14 +20,14 @@ class GameEngine {
         this.tileGapX = 16;
         this.tileGapY = 50;
         
-        // Perspective settings
+        // Camera
         this.cameraY = 0;
         this.targetCameraY = 0;
         
-        // Player State
+        // Player
         this.player = {
             row: 0,
-            col: 1, // 0: Left, 1: Center, 2: Right
+            col: 1,
             lastSafeRow: 0,
             lastSafeCol: 1,
             x: 0,
@@ -40,18 +40,14 @@ class GameEngine {
             alpha: 1
         };
 
-        // Effects
         this.particles = [];
 
-        // Bind events & resize
         this.handleResize = this.handleResize.bind(this);
         window.addEventListener('resize', this.handleResize);
         this.handleResize();
 
-        // Input listeners
         this.setupInput();
 
-        // Start animation loop
         this.lastTime = performance.now();
         this.animate = this.animate.bind(this);
         requestAnimationFrame(this.animate);
@@ -60,17 +56,16 @@ class GameEngine {
     handleResize() {
         const container = this.canvas.parentElement;
         const rect = container.getBoundingClientRect();
-        this.dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance
+        this.dpr = Math.min(window.devicePixelRatio || 1, 2);
         
         this.canvas.width = rect.width * this.dpr;
         this.canvas.height = rect.height * this.dpr;
         
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transform
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         this.ctx.scale(this.dpr, this.dpr);
         this.viewWidth = rect.width;
         this.viewHeight = rect.height;
 
-        // Adjust dimensions based on screen width
         if (this.viewWidth < 400) {
             this.tileWidth = 75;
             this.tileHeight = 54;
@@ -87,7 +82,7 @@ class GameEngine {
     }
 
     generateRow(rowIndex) {
-        // Exactly 3 tiles: 2 SAFE (true), 1 BREAKABLE (false)
+        // 3 tiles: 2 SAFE, 1 FRAIL
         const tiles = [true, true, false];
         for (let i = tiles.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -176,7 +171,6 @@ class GameEngine {
 
             const targetRow = this.player.row + 1;
             
-            // Check which tile was tapped
             for (let col = 0; col < 3; col++) {
                 const tilePos = this.getTilePosition(targetRow, col);
                 const screenY = tilePos.y + this.cameraY;
@@ -209,7 +203,6 @@ class GameEngine {
         const targetRowIndex = this.player.row + 1;
         this.ensureRows(targetRowIndex);
 
-        // Record last safe point
         this.player.lastSafeRow = this.player.row;
         this.player.lastSafeCol = this.player.col;
 
@@ -234,7 +227,7 @@ class GameEngine {
         tile.touched = true;
 
         if (tile.isSafe) {
-            // SAFE TILE!
+            // SAFE LANDING
             if ('vibrate' in navigator) {
                 try { navigator.vibrate(25); } catch(e){}
             }
@@ -255,7 +248,7 @@ class GameEngine {
             this.createSafeSparkles(this.player.x, this.player.y);
             this.updateHUD();
         } else {
-            // BREAKABLE TILE!
+            // GLASS BREAKS!
             tile.isBroken = true;
             if ('vibrate' in navigator) {
                 try { navigator.vibrate([80, 40, 100]); } catch(e){}
@@ -269,14 +262,14 @@ class GameEngine {
             // REDUCE EXACTLY 1 LIFE
             this.lives = Math.max(0, this.lives - 1);
             window.soundManager && window.soundManager.playLifeLost();
-            this.updateHUD(true); // pass lifeLost = true
+            this.updateHUD();
 
             setTimeout(() => {
                 if (this.lives > 0) {
-                    // STILL HAS LIVES -> RESPAWN ON LAST SAFE TILE!
+                    // STILL HAS LIVES -> RESPAWN ON LAST SAFE STEP, CONTINUE GAME!
                     this.respawnPlayer();
                 } else {
-                    // ZERO LIVES LEFT -> GAME OVER!
+                    // ALL 10 LIVES LOST -> GAME OVER!
                     this.triggerGameOver();
                 }
             }, 650);
@@ -311,7 +304,6 @@ class GameEngine {
     }
 
     createGlassShards(x, y) {
-        // Fast lightweight particle burst
         for (let i = 0; i < 16; i++) {
             const angle = Math.random() * Math.PI * 2;
             const speed = Math.random() * 6 + 2;
@@ -349,21 +341,18 @@ class GameEngine {
         }
     }
 
-    updateHUD(lifeLost = false) {
+    updateHUD() {
         this.onHUDUpdate && this.onHUDUpdate({
             lives: this.lives,
             maxLives: this.maxLives,
             score: this.score,
-            bestScore: this.bestScore,
-            lifeLost: lifeLost
+            bestScore: this.bestScore
         });
     }
 
     update(dt) {
-        // Camera smooth follow
         this.cameraY += (this.targetCameraY - this.cameraY) * 0.15;
 
-        // Player Jump
         if (this.state === 'JUMPING') {
             this.player.jumpProgress += dt * 4.5;
             if (this.player.jumpProgress >= 1) {
@@ -378,13 +367,11 @@ class GameEngine {
             }
         }
 
-        // Falling
         if (this.player.isFalling) {
             this.player.fallY += dt * 750;
             this.player.alpha = Math.max(0, this.player.alpha - dt * 2.0);
         }
 
-        // Particles
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             p.x += p.vx;
@@ -401,11 +388,9 @@ class GameEngine {
     }
 
     render() {
-        // Clear background
         this.ctx.fillStyle = '#070614';
         this.ctx.fillRect(0, 0, this.viewWidth, this.viewHeight);
 
-        // Background subtle grid lines
         this.ctx.strokeStyle = 'rgba(0, 243, 255, 0.04)';
         this.ctx.lineWidth = 1;
         this.ctx.beginPath();
@@ -418,10 +403,8 @@ class GameEngine {
         this.ctx.save();
         this.ctx.translate(0, this.cameraY);
 
-        // Draw Start Platform
         this.drawStartPlatform();
 
-        // Draw Visible Bridge Rows
         const startRow = Math.max(1, Math.floor(this.cameraY / (this.tileHeight + this.tileGapY)) - 1);
         const endRow = startRow + 10;
 
@@ -429,12 +412,10 @@ class GameEngine {
             this.drawBridgeRow(r);
         }
 
-        // Draw Player
         if (this.player.alpha > 0) {
             this.drawPlayer();
         }
 
-        // Draw Particles
         this.drawParticles();
 
         this.ctx.restore();
@@ -477,11 +458,9 @@ class GameEngine {
         const w = this.tileWidth;
         const h = this.tileHeight;
 
-        // Base support shadow
         this.ctx.fillStyle = 'rgba(12, 14, 28, 0.8)';
         this.ctx.fillRect(x - w / 2 + 4, y + h / 2 - 3, w - 8, 8);
 
-        // Glass Fill
         if (tile.touched && tile.isSafe) {
             this.ctx.fillStyle = 'rgba(0, 243, 255, 0.35)';
             this.ctx.strokeStyle = '#00f3ff';
@@ -494,7 +473,6 @@ class GameEngine {
 
         this.roundRect(x - w / 2, y - h / 2, w, h, 8, true, true);
 
-        // Glass reflection highlight
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
         this.ctx.beginPath();
         this.ctx.moveTo(x - w / 2 + 8, y - h / 2 + 3);
@@ -504,7 +482,6 @@ class GameEngine {
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Row step number
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
         this.ctx.font = '11px sans-serif';
         this.ctx.textAlign = 'center';
@@ -539,7 +516,6 @@ class GameEngine {
         this.ctx.save();
         this.ctx.globalAlpha = p.alpha;
 
-        // Character Shadow
         if (!p.isFalling && this.state !== 'JUMPING') {
             this.ctx.beginPath();
             this.ctx.ellipse(drawX, drawY + 10, 13, 5, 0, 0, Math.PI * 2);
@@ -547,26 +523,22 @@ class GameEngine {
             this.ctx.fill();
         }
 
-        // Cyber Runner Character Body
         this.ctx.beginPath();
         this.ctx.arc(drawX, drawY - 12, 14, 0, Math.PI * 2);
         this.ctx.fillStyle = '#00f3ff';
         this.ctx.fill();
 
-        // Visor
         this.ctx.fillStyle = '#070614';
         this.ctx.beginPath();
         this.ctx.roundRect(drawX - 7, drawY - 16, 14, 6, 2);
         this.ctx.fill();
 
-        // Eyes
         this.ctx.fillStyle = '#ff0077';
         this.ctx.beginPath();
         this.ctx.arc(drawX - 3, drawY - 13, 1.5, 0, Math.PI * 2);
         this.ctx.arc(drawX + 3, drawY - 13, 1.5, 0, Math.PI * 2);
         this.ctx.fill();
 
-        // Suit
         this.ctx.fillStyle = '#0088ff';
         this.ctx.beginPath();
         this.ctx.roundRect(drawX - 8, drawY + 1, 16, 10, 3);

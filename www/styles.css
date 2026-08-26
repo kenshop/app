@@ -76,7 +76,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     padding: 24px 20px;
-    background: rgba(7, 6, 20, 0.92);
+    background: rgba(7, 6, 20, 0.94);
     transition: opacity 0.25s ease;
 }
 
@@ -95,7 +95,7 @@ body {
 }
 
 .brand-title {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 800;
     color: #ffffff;
     display: flex;
@@ -107,7 +107,7 @@ body {
 .streak-badge-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: rgba(255, 215, 0, 0.15);
     border: 1px solid rgba(255, 215, 0, 0.6);
     padding: 6px 14px;
@@ -133,15 +133,15 @@ body {
 }
 
 .game-logo {
-    width: 100px;
-    height: 100px;
+    width: 95px;
+    height: 95px;
     background: rgba(0, 243, 255, 0.15);
     border: 2px solid var(--primary-cyan);
-    border-radius: 26px;
+    border-radius: 24px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 3rem;
+    font-size: 2.8rem;
 }
 
 .main-heading {
@@ -207,8 +207,8 @@ body {
 }
 
 .btn-icon {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     border-radius: 14px;
     border: 1px solid var(--card-border);
     background: var(--card-bg);
@@ -244,8 +244,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(12, 14, 30, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(12, 14, 30, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     padding: 8px 12px;
     border-radius: 18px;
     width: 100%;
@@ -257,66 +257,48 @@ body {
     gap: 4px;
     font-weight: 700;
     font-size: 0.95rem;
+    white-space: nowrap;
 }
 
 .hud-score-badge span {
     color: var(--primary-cyan);
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 800;
 }
 
-/* Clear 10-Lives Badge */
-.hud-lives-badge {
+/* 10 Visual Hearts Container (Wrapped 5x2 for mobile perfection) */
+.hud-lives-wrapper {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 3px;
-    background: rgba(255, 0, 119, 0.15);
-    border: 1px solid rgba(255, 0, 119, 0.4);
-    padding: 4px 10px;
-    border-radius: 12px;
+    justify-content: center;
+    background: rgba(255, 0, 119, 0.12);
+    border: 1px solid rgba(255, 0, 119, 0.35);
+    padding: 4px 8px;
+    border-radius: 14px;
 }
 
-.hud-lives-text {
-    font-weight: 800;
-    font-size: 0.9rem;
-    color: #ff3388;
-}
-
-.hud-lives-mini-hearts {
+.hud-lives-hearts {
     display: flex;
-    gap: 2px;
+    flex-wrap: wrap;
+    gap: 3px;
+    max-width: 135px;
+    justify-content: center;
 }
 
-.mini-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #ff0077;
+.heart-icon {
+    font-size: 0.9rem;
+    line-height: 1;
+    transition: opacity 0.2s ease, filter 0.2s ease;
 }
 
-.mini-dot.lost {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* Toast Warning Banner when Life Lost */
-.hud-toast {
-    align-self: center;
-    background: rgba(255, 0, 80, 0.9);
-    color: #ffffff;
-    font-weight: 800;
-    font-size: 0.95rem;
-    padding: 8px 18px;
-    border-radius: 20px;
-    margin-top: 8px;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.hud-toast.visible {
+.heart-icon.active {
     opacity: 1;
-    transform: translateY(0);
+    filter: drop-shadow(0 0 3px #ff0077);
+}
+
+.heart-icon.lost {
+    opacity: 0.18;
+    filter: grayscale(100%);
 }
 
 /* Modals */
@@ -327,7 +309,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 20;
-    background: rgba(4, 3, 12, 0.92);
+    background: rgba(4, 3, 12, 0.94);
     display: flex;
     justify-content: center;
     align-items: center;

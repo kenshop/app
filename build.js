@@ -3,12 +3,12 @@ const path = require('path');
 
 const wwwDir = path.join(__dirname, 'www');
 
-// Create www directory if it doesn't exist
-if (!fs.existsSync(wwwDir)) {
-    fs.mkdirSync(wwwDir, { recursive: true });
+// Ensure clean www directory
+if (fs.existsSync(wwwDir)) {
+    fs.rmSync(wwwDir, { recursive: true, force: true });
 }
+fs.mkdirSync(wwwDir, { recursive: true });
 
-// Helper to copy files
 function copyFile(filename) {
     const src = path.join(__dirname, filename);
     const dest = path.join(wwwDir, filename);
@@ -18,7 +18,6 @@ function copyFile(filename) {
     }
 }
 
-// Helper to copy directory recursively
 function copyDir(dirName) {
     const srcDir = path.join(__dirname, dirName);
     const destDir = path.join(wwwDir, dirName);
@@ -38,10 +37,10 @@ function copyDir(dirName) {
     console.log(`Copied directory ${dirName} -> www/`);
 }
 
-// Copy web assets
+// Bundle assets
 copyFile('index.html');
 copyFile('styles.css');
 copyFile('manifest.json');
 copyDir('js');
 
-console.log('Web assets successfully bundled in www/ folder!');
+console.log('Build complete! Web assets copied to www/');

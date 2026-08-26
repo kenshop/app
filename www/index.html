@@ -4,21 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>بازی پل شیشه‌ای | Glass Bridge Game</title>
-    <meta name="description" content="بازی چالش برانگیز و هیجان‌انگیز پل شیشه‌ای با ۱۰ جان و رکورد روزانه">
     <meta name="theme-color" content="#070614">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="styles.css?v=200">
+    <link rel="stylesheet" href="styles.css?v=500">
     <script>
-        // Force unregister legacy service workers and clear cache storage in Android WebView
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(registrations => {
-                for (let r of registrations) r.unregister();
+            navigator.serviceWorker.getRegistrations().then(rs => {
+                for (let r of rs) r.unregister();
             }).catch(() => {});
         }
         if ('caches' in window) {
-            caches.keys().then(keys => {
-                for (let k of keys) caches.delete(k);
+            caches.keys().then(ks => {
+                for (let k of ks) caches.delete(k);
             }).catch(() => {});
         }
     </script>
@@ -26,7 +22,7 @@
 <body>
 
     <div class="app-container">
-        <!-- 2.5D Canvas for Bridge Rendering -->
+        <!-- 2.5D Canvas Viewport -->
         <canvas id="gameCanvas"></canvas>
 
         <!-- 1. HOME SCREEN OVERLAY -->
@@ -66,8 +62,12 @@
                 <div class="hud-score-badge">
                     امتیاز: <span id="hudScore">0</span>
                 </div>
-                <!-- 10 Hearts Container -->
-                <div id="hudLivesContainer" class="hud-lives-container"></div>
+
+                <!-- 10 Visual Hearts Display -->
+                <div class="hud-lives-wrapper">
+                    <div id="hudLivesContainer" class="hud-lives-hearts"></div>
+                </div>
+
                 <button id="btnPause" class="btn-icon" style="width: 36px; height: 36px; font-size: 1rem;">⏸️</button>
             </div>
         </div>
@@ -75,7 +75,8 @@
         <!-- 3. GAME OVER MODAL -->
         <div id="gameOverModal" class="modal-overlay hidden">
             <div class="modal-card">
-                <h2 class="modal-title">پایان بازی 💔</h2>
+                <h2 class="modal-title">پایان ۱۰ جان 💔</h2>
+                <p style="color: #ff5588; font-weight: 600; font-size: 0.9rem;">تمام ۱۰ جان شما در این دور تمام شد!</p>
                 <div id="newRecordBadge" class="new-record-tag hidden">🎉 رکورد جدید!</div>
                 
                 <div class="results-grid">
@@ -103,18 +104,18 @@
                 <ul class="rules-list">
                     <li>در هر ردیف ۳ شیشه جلوته که ۲ تاش سالمه و ۱ دونه‌اش می‌شکنه!</li>
                     <li>روی یکی از ۳ شیشه‌ی ردیف بعدی کلیک یا لمس کن تا بپری.</li>
-                    <li>شما کلاً ۱۰ تا جان دارید. هر بار روی شیشه شکننده بیفتی، ۱ جانت کم میشه و روی شیشه امن قبلی قرار می‌گیری.</li>
-                    <li>روزهای بازی در بالا سمت راست نوشته میشه (Day 1, Day 2...). اگه یک روز بازی نکنی، استریک صفر میشه!</li>
+                    <li>شما کلاً ۱۰ تا قلب (جان) دارید. هر بار اشتباه کنی ۱ قلب کم میشه و روی شیشه امن قبلی قرار می‌گیری.</li>
+                    <li>پیام باخت و رکورد فقط وقتی <b>هر ۱۰ تا قلب تمام شد</b> ظاهر میشه!</li>
                 </ul>
                 <button id="btnCloseHowTo" class="btn-primary" style="margin-top: 10px;">متوجه شدم 👍</button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts with Version Query to bust cache -->
-    <script src="js/audio.js?v=200"></script>
-    <script src="js/streak.js?v=200"></script>
-    <script src="js/gameEngine.js?v=200"></script>
-    <script src="js/app.js?v=200"></script>
+    <!-- Scripts with Cache-Busting Version Query -->
+    <script src="js/audio.js?v=500"></script>
+    <script src="js/streak.js?v=500"></script>
+    <script src="js/gameEngine.js?v=500"></script>
+    <script src="js/app.js?v=500"></script>
 </body>
 </html>

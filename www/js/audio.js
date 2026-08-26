@@ -20,9 +20,8 @@ class SoundManager {
 
     precomputeNoise() {
         if (!this.ctx || this.noiseBuffer) return;
-        // Pre-allocate 0.2s of white noise once so we never allocate inside game loop
         const sampleRate = this.ctx.sampleRate;
-        const bufferSize = Math.floor(sampleRate * 0.25);
+        const bufferSize = Math.floor(sampleRate * 0.2);
         this.noiseBuffer = this.ctx.createBuffer(1, bufferSize, sampleRate);
         const output = this.noiseBuffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
@@ -112,7 +111,6 @@ class SoundManager {
                 whiteNoise.start(now);
                 whiteNoise.stop(now + 0.25);
             }
-            // Low thud
             const thud = this.ctx.createOscillator();
             const thudGain = this.ctx.createGain();
             thud.type = 'sine';

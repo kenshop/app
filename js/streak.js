@@ -19,7 +19,6 @@ class StreakManager {
     getDaysDifference(dateStr1, dateStr2) {
         const d1 = new Date(dateStr1);
         const d2 = new Date(dateStr2);
-        // Reset time component to ensure pure calendar day diff
         d1.setHours(0, 0, 0, 0);
         d2.setHours(0, 0, 0, 0);
         const diffMs = d2.getTime() - d1.getTime();
@@ -37,17 +36,13 @@ class StreakManager {
             const diffDays = this.getDaysDifference(lastDate, today);
 
             if (diffDays === 0) {
-                // Played today
                 this.streak = Math.max(1, savedStreak);
             } else if (diffDays === 1) {
-                // Played yesterday, ready for today's streak increment
                 this.streak = Math.max(1, savedStreak);
             } else if (diffDays > 1) {
-                // Missed one or more days -> reset to Day 1
                 this.streak = 1;
                 localStorage.setItem(this.STORAGE_KEY_STREAK, '1');
             } else {
-                // Date in future or clock issue
                 this.streak = Math.max(1, savedStreak);
             }
         }
@@ -63,13 +58,10 @@ class StreakManager {
         } else {
             const diffDays = this.getDaysDifference(lastDate, today);
             if (diffDays === 1) {
-                // Consecutive day play! Increment streak!
                 this.streak = savedStreak + 1;
             } else if (diffDays > 1) {
-                // Missed day -> reset
                 this.streak = 1;
             } else if (diffDays === 0) {
-                // Already played today -> keep current streak
                 this.streak = Math.max(1, savedStreak);
             }
         }
@@ -81,10 +73,6 @@ class StreakManager {
 
     getFormattedStreakText() {
         return `Day ${this.streak}`;
-    }
-
-    getPersianStreakText() {
-        return `روز ${this.streak}`;
     }
 }
 

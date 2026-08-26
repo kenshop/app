@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>بازی پل شیشه‌ای | Glass Bridge Game</title>
     <meta name="theme-color" content="#070614">
-    <link rel="stylesheet" href="styles.css?v=300">
+    <link rel="stylesheet" href="styles.css?v=500">
     <script>
-        // Force cleanup any old service workers/caches
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(rList => {
-                for (let r of rList) r.unregister();
+            navigator.serviceWorker.getRegistrations().then(rs => {
+                for (let r of rs) r.unregister();
             }).catch(() => {});
         }
         if ('caches' in window) {
-            caches.keys().then(kList => {
-                for (let k of kList) caches.delete(k);
+            caches.keys().then(ks => {
+                for (let k of ks) caches.delete(k);
             }).catch(() => {});
         }
     </script>
@@ -23,7 +22,7 @@
 <body>
 
     <div class="app-container">
-        <!-- 2.5D Canvas for Bridge Rendering -->
+        <!-- 2.5D Canvas Viewport -->
         <canvas id="gameCanvas"></canvas>
 
         <!-- 1. HOME SCREEN OVERLAY -->
@@ -49,7 +48,7 @@
             </div>
 
             <div class="home-footer">
-                <button id="btnPlay" class="btn-primary">شروع بازی (با ۱۰ جان) 🚀</button>
+                <button id="btnPlay" class="btn-primary">شروع بازی 🚀</button>
                 <div style="display: flex; gap: 10px;">
                     <button id="btnHowTo" class="btn-secondary" style="flex: 1;">راهنما 📖</button>
                     <button id="btnSoundToggle" class="btn-icon">🔊</button>
@@ -64,29 +63,25 @@
                     امتیاز: <span id="hudScore">0</span>
                 </div>
 
-                <!-- 10 Lives Indicator Badge -->
-                <div class="hud-lives-badge">
-                    <span id="hudLivesText" class="hud-lives-text">❤️ ۱۰ / ۱۰ جان</span>
-                    <div id="hudLivesDots" class="hud-lives-mini-hearts"></div>
+                <!-- 10 Visual Hearts Display -->
+                <div class="hud-lives-wrapper">
+                    <div id="hudLivesContainer" class="hud-lives-hearts"></div>
                 </div>
 
                 <button id="btnPause" class="btn-icon" style="width: 36px; height: 36px; font-size: 1rem;">⏸️</button>
             </div>
-
-            <!-- In-game Notification Toast -->
-            <div id="hudToast" class="hud-toast">💔 یک جان کم شد!</div>
         </div>
 
         <!-- 3. GAME OVER MODAL -->
         <div id="gameOverModal" class="modal-overlay hidden">
             <div class="modal-card">
-                <h2 class="modal-title">پایان بازی 💔</h2>
-                <p style="color: #ff5588; font-weight: 600; font-size: 0.9rem;">تمام ۱۰ جان شما تمام شد!</p>
+                <h2 class="modal-title">پایان ۱۰ جان 💔</h2>
+                <p style="color: #ff5588; font-weight: 600; font-size: 0.9rem;">تمام ۱۰ جان شما در این دور تمام شد!</p>
                 <div id="newRecordBadge" class="new-record-tag hidden">🎉 رکورد جدید!</div>
                 
                 <div class="results-grid">
                     <div class="result-box">
-                        <span class="result-label">رکوردی که در این دور زدی</span>
+                        <span class="result-label">رکوردی که الان زدی</span>
                         <span id="finalCurrentScore" class="result-val">0</span>
                     </div>
                     <div class="result-box">
@@ -96,7 +91,7 @@
                 </div>
 
                 <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-                    <button id="btnRestart" class="btn-primary">شروع مجدد با ۱۰ جان 🔄</button>
+                    <button id="btnRestart" class="btn-primary">تلاش مجدد 🔄</button>
                     <button id="btnHome" class="btn-secondary">صفحه اصلی 🏠</button>
                 </div>
             </div>
@@ -109,8 +104,8 @@
                 <ul class="rules-list">
                     <li>در هر ردیف ۳ شیشه جلوته که ۲ تاش سالمه و ۱ دونه‌اش می‌شکنه!</li>
                     <li>روی یکی از ۳ شیشه‌ی ردیف بعدی کلیک یا لمس کن تا بپری.</li>
-                    <li>شما کلاً <b>۱۰ تا جان</b> دارید. هر بار روی شیشه شکننده بیفتی، ۱ جانت کم میشه و روی شیشه امن قبلی برمی‌گردی تا ادامش بدی.</li>
-                    <li>پیام باخت و رکورد کل <b>فقط زمانی که تمام ۱۰ جانت تمام شد</b> نمایش داده میشه!</li>
+                    <li>شما کلاً ۱۰ تا قلب (جان) دارید. هر بار اشتباه کنی ۱ قلب کم میشه و روی شیشه امن قبلی قرار می‌گیری.</li>
+                    <li>پیام باخت و رکورد فقط وقتی <b>هر ۱۰ تا قلب تمام شد</b> ظاهر میشه!</li>
                 </ul>
                 <button id="btnCloseHowTo" class="btn-primary" style="margin-top: 10px;">متوجه شدم 👍</button>
             </div>
@@ -118,9 +113,9 @@
     </div>
 
     <!-- Scripts with Cache-Busting Version Query -->
-    <script src="js/audio.js?v=300"></script>
-    <script src="js/streak.js?v=300"></script>
-    <script src="js/gameEngine.js?v=300"></script>
-    <script src="js/app.js?v=300"></script>
+    <script src="js/audio.js?v=500"></script>
+    <script src="js/streak.js?v=500"></script>
+    <script src="js/gameEngine.js?v=500"></script>
+    <script src="js/app.js?v=500"></script>
 </body>
 </html>

@@ -21,9 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSoundToggle = document.getElementById('btnSoundToggle');
 
     const hudScore = document.getElementById('hudScore');
-    const hudLivesText = document.getElementById('hudLivesText');
-    const hudLivesDots = document.getElementById('hudLivesDots');
-    const hudToast = document.getElementById('hudToast');
+    const hudLivesContainer = document.getElementById('hudLivesContainer');
     const btnPause = document.getElementById('btnPause');
 
     const finalCurrentScore = document.getElementById('finalCurrentScore');
@@ -31,8 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const newRecordBadge = document.getElementById('newRecordBadge');
     const btnRestart = document.getElementById('btnRestart');
     const btnHome = document.getElementById('btnHome');
-
-    let toastTimeout = null;
 
     // 3. Render Initial State
     function renderHome() {
@@ -48,27 +44,16 @@ document.addEventListener('DOMContentLoaded', () => {
         howToModal.classList.add('hidden');
     }
 
-    // 4. Update HUD
+    // 4. Update HUD (Renders 10 Heart Icons)
     function updateHUD(data) {
         hudScore.textContent = data.score;
-        hudLivesText.textContent = `❤️ ${data.lives} / ${data.maxLives} جان`;
         
-        // Render 10 mini dots
-        hudLivesDots.innerHTML = '';
+        hudLivesContainer.innerHTML = '';
         for (let i = 0; i < data.maxLives; i++) {
-            const dot = document.createElement('span');
-            dot.className = 'mini-dot ' + (i < data.lives ? 'active' : 'lost');
-            hudLivesDots.appendChild(dot);
-        }
-
-        // Show Toast Notification on Life Lost
-        if (data.lifeLost) {
-            hudToast.textContent = `💔 ۱ جان کم شد! (${data.lives} جان باقی‌مانده)`;
-            hudToast.classList.add('visible');
-            if (toastTimeout) clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                hudToast.classList.remove('visible');
-            }, 1800);
+            const heart = document.createElement('span');
+            heart.className = 'heart-icon ' + (i < data.lives ? 'active' : 'lost');
+            heart.textContent = '❤️';
+            hudLivesContainer.appendChild(heart);
         }
     }
 

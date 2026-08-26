@@ -34,9 +34,10 @@ jobs:
       - name: Build Web Assets for Capacitor
         run: npm run build
 
-      - name: Initialize Capacitor Android Project
+      - name: Initialize & Force Copy Assets to Capacitor Android Project
         run: |
           npx cap add android || true
+          npx cap copy android
           npx cap sync android
 
       - name: Build Android APK with Gradle
@@ -47,37 +48,34 @@ jobs:
 
       - name: Prepare Dynamic APK Package Name
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v3.0.${{ github.run_number }}.apk
-          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v3-latest.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v4.0.${{ github.run_number }}.apk
 
       - name: Upload Downloadable APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Glass-Bridge-Game-APK-v3-${{ github.run_number }}
-          path: glass-bridge-v3.0.${{ github.run_number }}.apk
+          name: Glass-Bridge-Game-APK-v4-${{ github.run_number }}
+          path: glass-bridge-v4.0.${{ github.run_number }}.apk
 
       - name: Create Automatic GitHub Release for Direct Mobile Download
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v3.0.${{ github.run_number }}
-          name: 🚀 نسخه ۳.۰ (بدون لگ + سیستم ۱۰ جان قطعی)
+          tag_name: v4.0.${{ github.run_number }}
+          name: 🔥 بازنویسی کامل نسخه ۴.۰ (v4.0.${{ github.run_number }})
           body: |
-            📱 **دانلود مستقیم فایل جدید APK نسخه v3.0.${{ github.run_number }}**
+            📱 **دانلود مستقیم APK نهایی و بازنویسی‌شده (نسخه v4.0.${{ github.run_number }})**
             
-            ✅ **تغییرات اساسی نسخه ۳.۰:**
-            - **رفع کامل لگ روی گوشی**: بهینه‌سازی رندرینگ Canvas و حذف شادوی سنگین (۶۰ فریم بر ثانیه روانی کامل).
-            - **رفع لگ و تاخیر صدا**: پیش‌محاسبه افکت‌های صوتی Web Audio برای اجرای آنی و بدون قطعی.
-            - **نمایش قطعی ۱۰ جان در HUD**: نشانگر ویژه `❤️ ۱۰ / ۱۰ جان` به همراه ۱۰ نقطه بنفش/صورتی که هیچگاه در گوشی کوچک نمی‌شوند یا کات نمی‌خورند.
-            - **سیستم کم شدن ۱ جان هوشمند**: با هر اشتباه ۱ جان کم شده، پیام تراز `💔 ۱ جان کم شد!` ظاهر می‌شود، بازیکن روی آخرین شیشه امن برمی‌گردد و امتیاز حفظ می‌شود.
-            - **نمایش کادر باخت (Game Over)**: تنها و تنها زمانی که هر ۱۰ جان تمام شدند.
+            ✅ **تغییرات کلیدی این نسخه:**
+            - **اصلاح باگ کپسیتیور در گیت‌هاب (npx cap copy android)**: فورس‌کپی کدهای جدید در APK به طوری که نسخه قدیمی کدهای قبلی به هیچ وجه در اندروید اجرا نشود.
+            - **سیستم ۱۰ قلب بصری دقیق (۱۰ ❤️)**: نمایش ۱۰ قلب سرخ در بالای صفحه بازی.
+            - **حفظ امتیاز و ۱۰ جان واقعی**: هر بار اشتباه ۱ قلب خاکستری می‌شود، بازیکن به شیشه امن قبلی بازمی‌گردد و بازی ادامه می‌یابد.
+            - **کادر باخت فقط پس از اتمام تمام ۱۰ قلب**: تا زمانی که آخرین قلب قرمز باشد کادر باخت باز نمی‌شود.
+            - **۶۰ فریم روانی کامل و بدون لگ صوتی**.
 
-            👇 **جهت دانلود مستقیم روی لینک زیر کلیک کنید:**
-            `glass-bridge-v3.0.${{ github.run_number }}.apk`
+            👇 **لینک دانلود مستقیم:**
+            `glass-bridge-v4.0.${{ github.run_number }}.apk`
           draft: false
           prerelease: false
           make_latest: true
-          files: |
-            glass-bridge-v3.0.${{ github.run_number }}.apk
-            glass-bridge-v3-latest.apk
+          files: glass-bridge-v4.0.${{ github.run_number }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
