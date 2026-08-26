@@ -31,7 +31,7 @@ jobs:
       - name: Install Node Dependencies
         run: npm install
 
-      - name: Build Fresh Web Assets for Capacitor
+      - name: Build Web Assets for Capacitor
         run: npm run build
 
       - name: Initialize Capacitor Android Project
@@ -47,35 +47,37 @@ jobs:
 
       - name: Prepare Dynamic APK Package Name
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v2.0.${{ github.run_number }}.apk
-          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-latest.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v3.0.${{ github.run_number }}.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk glass-bridge-v3-latest.apk
 
       - name: Upload Downloadable APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Glass-Bridge-Game-APK-${{ github.run_number }}
-          path: glass-bridge-v2.0.${{ github.run_number }}.apk
+          name: Glass-Bridge-Game-APK-v3-${{ github.run_number }}
+          path: glass-bridge-v3.0.${{ github.run_number }}.apk
 
       - name: Create Automatic GitHub Release for Direct Mobile Download
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.0.${{ github.run_number }}
-          name: 🔥 نسخه اصلاح‌شده و نهایی (v2.0.${{ github.run_number }})
+          tag_name: v3.0.${{ github.run_number }}
+          name: 🚀 نسخه ۳.۰ (بدون لگ + سیستم ۱۰ جان قطعی)
           body: |
-            📱 **دانلود مستقیم APK اصلاح‌شده (نسخه v2.0.${{ github.run_number }})**
+            📱 **دانلود مستقیم فایل جدید APK نسخه v3.0.${{ github.run_number }}**
             
-            ✅ **تغییرات نهایی اعمال‌شده:**
-            - پاک‌سازی کامل کش قبلی مرورگر گوشی (Cache-Busting v200)
-            - اصلاح کامل ۱۰ جان (اسپاون روی آخرین شیشه امن)
-            - عدم نمایش کادر باخت تا زمانی که تمام ۱۰ جان تمام شوند
+            ✅ **تغییرات اساسی نسخه ۳.۰:**
+            - **رفع کامل لگ روی گوشی**: بهینه‌سازی رندرینگ Canvas و حذف شادوی سنگین (۶۰ فریم بر ثانیه روانی کامل).
+            - **رفع لگ و تاخیر صدا**: پیش‌محاسبه افکت‌های صوتی Web Audio برای اجرای آنی و بدون قطعی.
+            - **نمایش قطعی ۱۰ جان در HUD**: نشانگر ویژه `❤️ ۱۰ / ۱۰ جان` به همراه ۱۰ نقطه بنفش/صورتی که هیچگاه در گوشی کوچک نمی‌شوند یا کات نمی‌خورند.
+            - **سیستم کم شدن ۱ جان هوشمند**: با هر اشتباه ۱ جان کم شده، پیام تراز `💔 ۱ جان کم شد!` ظاهر می‌شود، بازیکن روی آخرین شیشه امن برمی‌گردد و امتیاز حفظ می‌شود.
+            - **نمایش کادر باخت (Game Over)**: تنها و تنها زمانی که هر ۱۰ جان تمام شدند.
 
-            👇 **از بخش Assets پایین دانلود کنید:**
-            `glass-bridge-v2.0.${{ github.run_number }}.apk`
+            👇 **جهت دانلود مستقیم روی لینک زیر کلیک کنید:**
+            `glass-bridge-v3.0.${{ github.run_number }}.apk`
           draft: false
           prerelease: false
           make_latest: true
           files: |
-            glass-bridge-v2.0.${{ github.run_number }}.apk
-            glass-bridge-latest.apk
+            glass-bridge-v3.0.${{ github.run_number }}.apk
+            glass-bridge-v3-latest.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
